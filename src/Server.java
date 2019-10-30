@@ -15,6 +15,7 @@ public class Server {
     public static ArrayList<ClientThread> Clients = new ArrayList<ClientThread>();
     static int clientCount = 0;
     static String message = "";
+    static String clientListString = "";
 
     public static void main(String[] args) throws Exception {
 
@@ -150,6 +151,43 @@ public class Server {
 
                     Thread.sleep(1000);
 
+                }
+
+            } catch (Exception ex) {
+
+            }
+
+        }}).start();
+
+        //thread to always get the date and send to clients
+        new Thread (new Runnable(){ @Override
+        public void run() {
+
+            try {
+
+                DataOutputStream outToClient;
+
+                while (true) {
+                    if (Clients.size() > 0) {
+                        String clientsList = "";
+
+                        for (int i = 0; i < Clients.size() - 1; i++) {
+                            clientsList += Clients.get(i).name + ",";
+                        }
+
+                        clientsList += Clients.get(Clients.size() - 1).name;
+
+                        if (!clientListString.equals(clientsList)) {
+                            for (int i = 0; i < Clients.size(); i++) {
+                                outToClient = new DataOutputStream(Clients.get(i).connectionSocket.getOutputStream());
+                                outToClient.writeBytes("-CurrentUsers" + "," + clientsList + "\n");
+                            }
+
+                            clientListString = clientsList;
+                        }
+                    }
+
+                    Thread.sleep(1000);
                 }
 
             } catch (Exception ex) {

@@ -248,9 +248,15 @@ public class Client {
 
                         receivedMessage += message + "\n";
                         receivedTextArea.append(receivedMessage);
-                    } else if (receivedSentence.startsWith("-Count")) {
+                    } else if (receivedSentence.startsWith("-CurrentUsers")) {
+
+                        usersComboBox.removeAllItems();
 
                         String []strings = receivedSentence.split(",");
+
+                        for (int i = 1; i < strings.length; i++) {
+                            usersComboBox.addItem(strings[i]);
+                        }
 //                        countLabel.setText("Number of connected clients to the server: " + strings[1] + "\n");
 
                     }
