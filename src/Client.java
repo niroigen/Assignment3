@@ -145,11 +145,14 @@ public class Client {
                     //create an output stream
                     DataOutputStream outToServer = new DataOutputStream (clientSocket.getOutputStream());
 
-                    if (!sendTextArea.getText().equals("")) { //if the send to textfield has a name then add "@sendTo name:" to the beginning of the message and send it
+                    Object selectedItem = usersComboBox.getSelectedItem();
 
-                        String sendingSentence = "-Compute," + sendTextArea.getText() + "\n";
+                    if (selectedItem != null) {
+
+                    } else {
+                        String text = sendTextArea.getText();
+                        String sendingSentence = "-Message," + text + "," + clientTextField.getText() + "\n";
                         outToServer.writeBytes(sendingSentence);
-
                     }
 
                 } catch (Exception ex) {
@@ -230,14 +233,21 @@ public class Client {
                         }
 //                        dateLabel.setText("Server's Date: " + strings[1]);
 
-                    } else if (receivedSentence.startsWith("-Results")) {
-
+                    } else if (receivedSentence.startsWith("-NewMessage")) {
                         String []strings = receivedSentence.split(",");
-                        receivedTextArea.setText("Sum is: " + strings[1] + "\n");
-                        receivedTextArea.append("Average is: " + strings[2] + "\n");
-                        receivedTextArea.append("Minimum is: " + strings[3] + "\n");
-                        receivedTextArea.append("Maximum is: " + strings[4]);
+                        String message = strings[1];
+                        String user = strings[2];
 
+                        String receivedMessage = "";
+
+                        if (user.equals(clientTextField.getText())) {
+                            receivedMessage += "You: ";
+                        } else {
+                            receivedMessage += user + ": ";
+                        }
+
+                        receivedMessage += message + "\n";
+                        receivedTextArea.append(receivedMessage);
                     } else if (receivedSentence.startsWith("-Count")) {
 
                         String []strings = receivedSentence.split(",");

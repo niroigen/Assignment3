@@ -14,6 +14,7 @@ public class Server {
     //Array of type ClientServiceThread, for all connected clients
     public static ArrayList<ClientThread> Clients = new ArrayList<ClientThread>();
     static int clientCount = 0;
+    static String message = "";
 
     public static void main(String[] args) throws Exception {
 
@@ -138,16 +139,13 @@ public class Server {
 
                 while (true) {
 
-                    Date now = new Date();
-                    SimpleDateFormat dateFormatter = new SimpleDateFormat("EEEE, MMMM d, yyyy  h:m:s a z");
+                    if (!message.equals("")) {
+                        for (int i = 0; i < Clients.size(); i++) {
+                            outToClient = new DataOutputStream(Clients.get(i).connectionSocket.getOutputStream());
+                            outToClient.writeBytes(message);
+                        }
 
-                    //System.out.println(dateFormatter.format(now));
-
-                    for (int i = 0; i < Clients.size(); i++) {
-
-                        outToClient = new DataOutputStream(Clients.get(i).connectionSocket.getOutputStream());
-                        outToClient.writeBytes("-Date;" + dateFormatter.format(now) + "\n");
-
+                        message = "";
                     }
 
                     Thread.sleep(1000);

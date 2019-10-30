@@ -49,34 +49,14 @@ public class ClientThread extends Thread{
 
                     }
 
-                } else if (clientSentence.startsWith("-Compute")) { //compute the sum and send the result back
+                } else if (clientSentence.startsWith("-Message")) { //compute the sum and send the result back
 
-                    String []numbers = clientSentence.split(",");
+                    String []sentMessages = clientSentence.split(",");
 
-                    double sum = Double.parseDouble(numbers[1]);
-                    double min = Double.parseDouble(numbers[1]);
-                    double max = Double.parseDouble(numbers[1]);
+                    String message = sentMessages[1];
+                    String user = sentMessages[2];
 
-                    for (int i = 2; i < numbers.length; i++) {
-
-                        sum += Double.parseDouble(numbers[i]);
-
-                        if (Double.parseDouble(numbers[i]) < min)
-                            min = Double.parseDouble(numbers[i]);
-
-                        if (Double.parseDouble(numbers[i]) > max)
-                            max = Double.parseDouble(numbers[i]);
-
-                    }
-
-                    double average = sum / (numbers.length - 1);
-
-                    outToClient = new DataOutputStream(connectionSocket.getOutputStream());
-                    outToClient.writeBytes("-Results," + sum + ","
-                            + average + ","
-                            + min + ","
-                            + max + "\n");
-
+                    Server.message = "-NewMessage," + message + "," + user + "\n";
                 }
             }
 
