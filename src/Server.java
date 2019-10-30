@@ -78,6 +78,7 @@ public class Server {
             try {
 
                 DataOutputStream outToClient;
+                int currentCount = 0;
 
                 while (true) {
 
@@ -95,8 +96,19 @@ public class Server {
                         connectionStatusLabel.setText("No Clients Connected");
                         connectionStatusLabel.setForeground(Color.red);
 
+                        clientCount = 0;
                     }
 
+                    if (currentCount < Clients.size()) {
+                        for (int i = 0; i < Clients.size(); i++) {
+                            outToClient = new DataOutputStream(Clients.get(i).connectionSocket.getOutputStream());
+                            outToClient.writeBytes("-NewUser," + Clients.get(currentCount).name + "\n");
+                        }
+
+                        currentCount++;
+                    } else if (currentCount > Clients.size()) {
+                        currentCount -= 1;
+                    }
 
                     for (int i = 0; i < Clients.size(); i++) {
 

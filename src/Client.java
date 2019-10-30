@@ -122,6 +122,7 @@ public class Client {
                             clientTextField.setEnabled(true);
 //                        dateLabel.setVisible(false);
 //                        countLabel.setVisible(false);
+                            receivedTextArea.setText("");
                             receivedTextArea.setVisible(false);
                             receivedTextAreaScroll.setVisible(false);
 
@@ -205,18 +206,6 @@ public class Client {
 
                 //create a buffer reader and connect it to the socket's input stream
                 BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-
-                // Send the name to the server
-                try {
-                    //create an output stream
-                    DataOutputStream outToServer = new DataOutputStream (clientSocket.getOutputStream());
-
-                    String sendingSentence = "-Name," + clientTextField.getText() + "\n";
-                    outToServer.writeBytes(sendingSentence);
-                } catch (Exception ex) {
-                    System.out.println(ex.toString());
-                }
-
                 String receivedSentence;
 
                 //always read received messages and append them to the textArea
@@ -225,9 +214,20 @@ public class Client {
                     receivedSentence = inFromServer.readLine();
                     //System.out.println(receivedSentence);
 
-                    if (receivedSentence.startsWith("-Users")) {
+                    if (receivedSentence.startsWith("-Connected")) {
+                        DataOutputStream outToServer = new DataOutputStream (clientSocket.getOutputStream());
 
-                        String []strings = receivedSentence.split(";");
+                        String sendingSentence = "-Name," + clientTextField.getText() + "\n";
+                        outToServer.writeBytes(sendingSentence);
+                    } else if (receivedSentence.startsWith("-NewUser")) {
+
+                        String []strings = receivedSentence.split(",");
+                        String newUser = strings[1];
+                        if (newUser.equals(clientTextField.getText())) {
+                            receivedTextArea.append("You are Connected\n");
+                        } else {
+                            receivedTextArea.append(newUser + " is connected\n");
+                        }
 //                        dateLabel.setText("Server's Date: " + strings[1]);
 
                     } else if (receivedSentence.startsWith("-Results")) {
