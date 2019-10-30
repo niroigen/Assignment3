@@ -7,14 +7,16 @@ import java.util.ArrayList;
 public class ClientThread extends Thread{
 
     //the ClientServiceThread class extends the Thread class and has the following parameters
-    public int number; //client name
+    public int id;
+    public String name; //client name
     public Socket connectionSocket; //client connection socket
     ArrayList<ClientThread> Clients; //list of all clients connected to the server
 
     //constructor function
-    public ClientThread(int number, Socket connectionSocket, ArrayList<ClientThread> Clients) {
+    public ClientThread(int id, String name, Socket connectionSocket, ArrayList<ClientThread> Clients) {
 
-        this.number = number;
+        this.id = id;
+        this.name = name;
         this.connectionSocket = connectionSocket;
         this.Clients = Clients;
 
@@ -41,7 +43,7 @@ public class ClientThread extends Thread{
 
                     for (int i = 0; i < Clients.size(); i++) {
 
-                        if (Clients.get(i).number == number) {
+                        if (Clients.get(i).id == id) {
                             Clients.remove(i);
                         }
 

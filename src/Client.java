@@ -14,6 +14,7 @@ public class Client {
     static Socket clientSocket;
     static JTextArea receivedTextArea;
     static JComboBox usersComboBox;
+    static JTextField clientTextField;
 //    static JLabel countLabel;
 //    static JLabel dateLabel;
 
@@ -25,13 +26,16 @@ public class Client {
         frame.setBounds(100, 100, 500, 550);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JLabel statusLabel = new JLabel("Not Connected");
-        statusLabel.setBounds(20, 40, 150, 30);
-        statusLabel.setForeground(Color.RED);
-        frame.getContentPane().add(statusLabel);
+        JLabel clientLabel = new JLabel("Client Name");
+        clientLabel.setBounds(20, 40, 150, 30);
+        frame.getContentPane().add(clientLabel);
+
+        clientTextField = new JTextField();
+        clientTextField.setBounds(100, 40, 200, 30);
+        frame.getContentPane().add(clientTextField);
 
         JButton connectButton = new JButton("Connect");
-        connectButton.setBounds(290, 40, 100, 30);
+        connectButton.setBounds(300, 40, 100, 30);
         frame.getContentPane().add(connectButton);
 
 //        countLabel = new JLabel("");
@@ -77,60 +81,58 @@ public class Client {
         connectButton.addActionListener( new ActionListener() {
             public void actionPerformed(ActionEvent e)
             {
-                try {
+                if (!clientTextField.getText().equals("")) {
+                    try {
+                        if (connectButton.getText().equals("Connect")) { //if pressed to connect
 
-                    if (connectButton.getText().equals("Connect")) { //if pressed to connect
+                            //create a new socket to connect with the server application
+                            clientSocket = new Socket("localhost", 6789);
 
-                        //create a new socket to connect with the server application
-                        clientSocket = new Socket ("localhost", 6789);
+                            //call function StartThread
+                            StartThread();
 
-                        //call function StartThread
-                        StartThread();
-
-                        //make the GUI components visible, so the client can send and receive messages
-                        sendButton.setVisible(true);
-                        sendLabel.setVisible(true);
-                        sendTextArea.setVisible(true);
-                        usersComboBox.setVisible(true);
+                            //make the GUI components visible, so the client can send and receive messages
+                            sendButton.setVisible(true);
+                            sendLabel.setVisible(true);
+                            sendTextArea.setVisible(true);
+                            usersComboBox.setVisible(true);
+                            clientTextField.setEnabled(false);
 //                        dateLabel.setVisible(true);
 //                        countLabel.setVisible(true);
-                        receivedTextArea.setVisible(true);
-                        receivedTextAreaScroll.setVisible(true);
+                            receivedTextArea.setVisible(true);
+                            receivedTextAreaScroll.setVisible(true);
 
-                        statusLabel.setText("Connected");
-                        statusLabel.setForeground(Color.BLUE);
+                            //change the Connect button text to disconnect
+                            connectButton.setText("Disconnect");
 
-                        //change the Connect button text to disconnect
-                        connectButton.setText("Disconnect");
+                        } else { //if pressed to disconnect
 
-                    } else { //if pressed to disconnect
+                            //create an output stream and send a Remove message to disconnect from the server
+                            DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+                            outToServer.writeBytes("-Remove\n");
 
-                        //create an output stream and send a Remove message to disconnect from the server
-                        DataOutputStream outToServer = new DataOutputStream (clientSocket.getOutputStream());
-                        outToServer.writeBytes("-Remove\n");
+                            //close the client's socket
+                            clientSocket.close();
 
-                        //close the client's socket
-                        clientSocket.close();
-
-                        //make the GUI components invisible
-                        sendButton.setVisible(false);
-                        sendLabel.setVisible(false);
-                        sendTextArea.setVisible(false);
-                        usersComboBox.setVisible(false);
+                            //make the GUI components invisible
+                            sendButton.setVisible(false);
+                            sendLabel.setVisible(false);
+                            sendTextArea.setVisible(false);
+                            usersComboBox.setVisible(false);
+                            clientTextField.setEnabled(true);
 //                        dateLabel.setVisible(false);
 //                        countLabel.setVisible(false);
-                        receivedTextArea.setVisible(false);
-                        receivedTextAreaScroll.setVisible(false);
+                            receivedTextArea.setVisible(false);
+                            receivedTextAreaScroll.setVisible(false);
 
-                        //change the Connect button text to connect
-                        connectButton.setText("Connect");
-                        statusLabel.setText("Not Connected");
-                        statusLabel.setForeground(Color.RED);
+                            //change the Connect button text to connect
+                            connectButton.setText("Connect");
 
+                        }
+
+                    } catch (Exception ex) {
+                        System.out.println(ex.toString());
                     }
-
-                } catch (Exception ex) {
-                    System.out.println(ex.toString());
                 }
             }});
 
@@ -178,8 +180,6 @@ public class Client {
 
                     //change the Connect button text to connect
                     connectButton.setText("Connect");
-                    statusLabel.setText("Not Connected");
-                    statusLabel.setForeground(Color.RED);
 
                     System.exit(0);
 
@@ -206,6 +206,17 @@ public class Client {
                 //create a buffer reader and connect it to the socket's input stream
                 BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
+                // Send the name to the server
+                try {
+                    //create an output stream
+                    DataOutputStream outToServer = new DataOutputStream (clientSocket.getOutputStream());
+
+                    String sendingSentence = "-Name," + clientTextField.getText() + "\n";
+                    outToServer.writeBytes(sendingSentence);
+                } catch (Exception ex) {
+                    System.out.println(ex.toString());
+                }
+
                 String receivedSentence;
 
                 //always read received messages and append them to the textArea
@@ -214,7 +225,7 @@ public class Client {
                     receivedSentence = inFromServer.readLine();
                     //System.out.println(receivedSentence);
 
-                    if (receivedSentence.startsWith("-Date")) {
+                    if (receivedSentence.startsWith("-Users")) {
 
                         String []strings = receivedSentence.split(";");
 //                        dateLabel.setText("Server's Date: " + strings[1]);

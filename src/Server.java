@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
@@ -48,10 +50,13 @@ public class Server {
                     outToClient = new DataOutputStream(connectionSocket.getOutputStream());
                     outToClient.writeBytes("-Connected\n");
 
+                    BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));;
+                    String name = inFromClient.readLine().split(",")[1];
+
                     clientCount++;
 
                     //add the new client to the client's array
-                    Clients.add(new ClientThread(clientCount, connectionSocket, Clients));
+                    Clients.add(new ClientThread(clientCount, name, connectionSocket, Clients));
                     //start the new client's thread
                     Clients.get(Clients.size() - 1).start();
 
