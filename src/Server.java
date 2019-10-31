@@ -15,6 +15,8 @@ public class Server {
     public static ArrayList<ClientThread> Clients = new ArrayList<ClientThread>();
     static int clientCount = 0;
     static String message = "";
+    static String messageTo = "";
+    static String messageFrom = "";
     static String clientListString = "";
 
     public static void main(String[] args) throws Exception {
@@ -143,10 +145,22 @@ public class Server {
                     if (!message.equals("")) {
                         for (int i = 0; i < Clients.size(); i++) {
                             outToClient = new DataOutputStream(Clients.get(i).connectionSocket.getOutputStream());
-                            outToClient.writeBytes(message);
+                            String outputMessage = message + "," + messageTo + "," + messageFrom + "\n";
+
+                            if (!messageTo.equals("") && !messageFrom.equals("")) {
+                                if (messageTo.equals(Clients.get(i).name)) {
+                                    outToClient.writeBytes(outputMessage);
+                                } else if (messageFrom.equals(Clients.get(i).name)) {
+                                    outToClient.writeBytes(outputMessage);
+                                }
+                            } else {
+                                outToClient.writeBytes(outputMessage);
+                            }
                         }
 
                         message = "";
+                        messageTo = "";
+                        messageFrom = "";
                     }
 
                     Thread.sleep(1000);

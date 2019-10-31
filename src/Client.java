@@ -147,14 +147,16 @@ public class Client {
 
                     Object selectedItem = usersComboBox.getSelectedItem();
 
-                    if (selectedItem != null) {
+                    String text = sendTextArea.getText();
+                    String sendingSentence = "-Message," + text + "," + clientTextField.getText();
 
-                    } else {
-                        String text = sendTextArea.getText();
-                        String sendingSentence = "-Message," + text + "," + clientTextField.getText() + "\n";
-                        outToServer.writeBytes(sendingSentence);
+                    if (selectedItem != null) {
+                        sendingSentence += "," + selectedItem;
                     }
 
+                    sendingSentence += "\n";
+
+                    outToServer.writeBytes(sendingSentence);
                 } catch (Exception ex) {
                     System.out.println(ex.toString());
                 }
@@ -237,11 +239,15 @@ public class Client {
                         String []strings = receivedSentence.split(",");
                         String message = strings[1];
                         String user = strings[2];
+                        String messageTo = strings[3];
+                        String messageFrom = strings[4];
 
                         String receivedMessage = "";
 
-                        if (user.equals(clientTextField.getText())) {
-                            receivedMessage += "You: ";
+                        if (messageTo.equals(clientTextField.getText())){
+                            receivedMessage += messageFrom + ": ";
+                        } else if (messageFrom.equals(clientTextField.getText())) {
+                            receivedMessage += "You to " + messageTo + ": ";
                         } else {
                             receivedMessage += user + ": ";
                         }

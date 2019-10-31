@@ -56,16 +56,16 @@ public class ClientThread extends Thread{
                     String message = sentMessages[1];
                     String user = sentMessages[2];
 
-                    Server.message = "-NewMessage," + message + "," + user + "\n";
+                    if (sentMessages.length == 4) {
+                        Server.messageTo = sentMessages[3];
+                    }
+
+                    Server.message = "-NewMessage," + message + "," + user;
+                    Server.messageFrom = user;
                 }
             }
-
-
         } catch(Exception ex) {
 
         }
-
-
     }
-
 }
