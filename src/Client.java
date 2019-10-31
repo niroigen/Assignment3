@@ -268,7 +268,8 @@ public class Client {
                         usersComboBox.addItem("Everyone");
 
                         for (int i = 1; i < strings.length; i++) {
-                            usersComboBox.addItem(strings[i]);
+                            if (!strings[i].equals(clientTextField.getText()))
+                                usersComboBox.addItem(strings[i]);
                         }
 //                        countLabel.setText("Number of connected clients to the server: " + strings[1] + "\n");
 
