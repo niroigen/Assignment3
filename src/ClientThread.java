@@ -60,8 +60,15 @@ public class ClientThread extends Thread{
                         Server.messageTo = sentMessages[3];
                     }
 
-                    Server.message = "-NewMessage," + message + "," + user;
                     Server.messageFrom = user;
+
+                    if (Server.messageTo.equals("Everyone")) {
+                        Server.messageTo = " ";
+                    }
+
+                    Server.message = "-NewMessage," + message + "," + user;
+
+                    System.out.println("message is " + Server.message + " for " + Server.messageTo + " by " + Server.messageFrom);
                 }
             }
         } catch(Exception ex) {

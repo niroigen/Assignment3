@@ -147,7 +147,7 @@ public class Server {
                             outToClient = new DataOutputStream(Clients.get(i).connectionSocket.getOutputStream());
                             String outputMessage = message + "," + messageTo + "," + messageFrom + "\n";
 
-                            if (!messageTo.equals("") && !messageFrom.equals("")) {
+                            if (!messageTo.equals(" ") && !messageFrom.equals(" ")) {
                                 if (messageTo.equals(Clients.get(i).name)) {
                                     outToClient.writeBytes(outputMessage);
                                 } else if (messageFrom.equals(Clients.get(i).name)) {

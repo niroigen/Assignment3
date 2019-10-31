@@ -123,6 +123,7 @@ public class Client {
 //                        dateLabel.setVisible(false);
 //                        countLabel.setVisible(false);
                             receivedTextArea.setText("");
+                            sendTextArea.setText("");
                             receivedTextArea.setVisible(false);
                             receivedTextAreaScroll.setVisible(false);
 
@@ -247,7 +248,11 @@ public class Client {
                         if (messageTo.equals(clientTextField.getText())){
                             receivedMessage += messageFrom + ": ";
                         } else if (messageFrom.equals(clientTextField.getText())) {
-                            receivedMessage += "You to " + messageTo + ": ";
+                            if (messageTo.equals(" ")) {
+                                receivedMessage += "You: ";
+                            } else {
+                                receivedMessage += "You to " + messageTo + ": ";
+                            }
                         } else {
                             receivedMessage += user + ": ";
                         }
@@ -259,6 +264,8 @@ public class Client {
                         usersComboBox.removeAllItems();
 
                         String []strings = receivedSentence.split(",");
+
+                        usersComboBox.addItem("Everyone");
 
                         for (int i = 1; i < strings.length; i++) {
                             usersComboBox.addItem(strings[i]);
