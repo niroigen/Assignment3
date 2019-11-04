@@ -15,8 +15,6 @@ public class Client {
     static JTextArea receivedTextArea;
     static JComboBox usersComboBox;
     static JTextField clientTextField;
-//    static JLabel countLabel;
-//    static JLabel dateLabel;
 
     public static void main(String[] args) throws Exception {
 
@@ -37,16 +35,6 @@ public class Client {
         JButton connectButton = new JButton("Connect");
         connectButton.setBounds(300, 40, 100, 30);
         frame.getContentPane().add(connectButton);
-
-//        countLabel = new JLabel("");
-//        countLabel.setBounds(20, 100, 300, 30);
-//        frame.getContentPane().add(countLabel);
-//        countLabel.setVisible(false);
-
-//        dateLabel = new JLabel("Server's Date");
-//        dateLabel.setBounds(20, 140, 400, 30);
-//        frame.getContentPane().add(dateLabel);
-//        dateLabel.setVisible(false);
 
         JLabel sendLabel = new JLabel("Send To");
         sendLabel.setBounds(20, 400, 100, 30);
@@ -97,8 +85,6 @@ public class Client {
                             sendTextArea.setVisible(true);
                             usersComboBox.setVisible(true);
                             clientTextField.setEnabled(false);
-//                        dateLabel.setVisible(true);
-//                        countLabel.setVisible(true);
                             receivedTextArea.setVisible(true);
                             receivedTextAreaScroll.setVisible(true);
 
@@ -120,8 +106,6 @@ public class Client {
                             sendTextArea.setVisible(false);
                             usersComboBox.setVisible(false);
                             clientTextField.setEnabled(true);
-//                        dateLabel.setVisible(false);
-//                        countLabel.setVisible(false);
                             receivedTextArea.setText("");
                             sendTextArea.setText("");
                             receivedTextArea.setVisible(false);
@@ -180,8 +164,6 @@ public class Client {
                     sendButton.setVisible(false);
                     sendLabel.setVisible(false);
                     sendTextArea.setVisible(false);
-//                    dateLabel.setVisible(false);
-//                    countLabel.setVisible(false);
                     receivedTextArea.setVisible(false);
                     receivedTextAreaScroll.setVisible(false);
 
@@ -234,7 +216,6 @@ public class Client {
                         } else {
                             receivedTextArea.append(newUser + " is connected\n");
                         }
-//                        dateLabel.setText("Server's Date: " + strings[1]);
 
                     } else if (receivedSentence.startsWith("-NewMessage")) {
                         String []strings = receivedSentence.split(",");
@@ -271,8 +252,6 @@ public class Client {
                             if (!strings[i].equals(clientTextField.getText()))
                                 usersComboBox.addItem(strings[i]);
                         }
-//                        countLabel.setText("Number of connected clients to the server: " + strings[1] + "\n");
-
                     }
                 }
 
